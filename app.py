@@ -19,8 +19,8 @@ def process_file():
     f_name = f.filename.split('.')[0]
     result = "File not found."
     if lookup:
-        result = lookup[f_name]
+        result = f"{f_name}:{lookup[f_name]}"
     else:
         load_data()
-        result = lookup[f_name]
+        result = f"{f_name}:{lookup[f_name]}"
     return result
