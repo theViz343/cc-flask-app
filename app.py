@@ -8,7 +8,7 @@ req_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/1225554005-req
 response_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/1225554005-resp-queue'
 
 def send_file_to_queue(f):
-    sqs = boto3.client('sqs', regioin_name='us-east-1')
+    sqs = boto3.client('sqs', region_name='us-east-1')
     file_content_binary = f.read()
     file_content_base64 = base64.b64encode(file_content_binary).decode('utf-8')
     f_name = f.filename.split('.')[0]
