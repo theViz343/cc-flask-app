@@ -50,6 +50,7 @@ def process_file():
     f_name = f.filename.split('.')[0]
     result = None
     send_file_to_queue(f)
+    print("sent file to queue")
     while result is None:
         result = get_response_from_queue(f_name)
     return result
