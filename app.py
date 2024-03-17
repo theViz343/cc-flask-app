@@ -24,16 +24,32 @@ def send_file_to_queue(f):
     MessageBody=(file_content_base64)
 )
 
+def get_response_from_queue(fname):
+    sqs = boto3.client('sqs', region_name='us-east-1')
+    response = sqs.receive_message(
+        QueueUrl=response_queue_url,
+        MaxNumberOfMessages=1,
+        MessageAttributeNames=[
+            'All',
+        ],
+
+    )
+    if 'Messages' in response:
+        print("Got message from queue...")
+        for message in response['Messages']:
+            content = message['Body']
+            file_name = content.split(':')[0]
+            if file_name==fname:
+                return content
+    else:
+        return None
+
 @app.route("/", methods=['POST'])
 def process_file():
     f = request.files['inputFile']
     f_name = f.filename.split('.')[0]
-    result = "File not found."
+    result = None
     send_file_to_queue(f)
-
-    with open('lookup.csv', mode='r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            if row[0] == f_name:
-                result = f"{f_name}:{row[1]}"
+    while result is None:
+        result = get_response_from_queue(f_name)
     return result
