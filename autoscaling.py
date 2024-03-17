@@ -15,7 +15,7 @@ def count_instances_with_tag(tag_key, tag_value):
     response = ec2.describe_instances(
         Filters=[
             {'Name': 'tag:' + tag_key, 'Values': [tag_value]},
-            {'Name': 'instance-state-name', 'Values': ['running']}
+            {'Name': 'instance-state-name', 'Values': ['running','pending']}
         ]
     )
     count = sum(len(reservations['Instances']) for reservations in response['Reservations'])
@@ -48,6 +48,7 @@ def scale_up(number):
         ]
 
     )
+    print(f"Created {number} instances")
 
 def scale_down(number):
     ec2 = boto3.client('ec2', region_name='us-east-1')
@@ -58,9 +59,10 @@ def scale_down(number):
         ]
     )
     instance_ids = [instance['InstanceId'] for reservation in response['Reservations'] for instance in reservation['Instances']]
-    count = min(count, len(instance_ids))
+    count = min(number, len(instance_ids))
     if count > 0:
         ec2.terminate_instances(InstanceIds=instance_ids[:count])
+    print(f"Created {count} instances")
 
 while True:
     number_of_messages = get_queue_length(req_queue_url)
