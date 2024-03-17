@@ -1,4 +1,5 @@
 import boto3
+import math
 
 req_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/1225554005-req-queue'
 
@@ -66,7 +67,7 @@ def scale_down(number):
 
 while True:
     number_of_messages = get_queue_length(req_queue_url)
-    no_of_instances_needed = min(int((number_of_messages/50)*19), 20)
+    no_of_instances_needed = min(math.ceil((number_of_messages/50)*19), 20)
     current_number = count_instances_with_tag('Name', 'app-tier-instance')
     print("Number of messages", number_of_messages)
     print("Number of instances needed", no_of_instances_needed)
