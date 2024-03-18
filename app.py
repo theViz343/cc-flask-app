@@ -35,7 +35,7 @@ def get_response_from_queue(fname):
         MessageAttributeNames=[
             'All',
         ],
-        WaitTImeSeconds=60,
+        WaitTimeSeconds=60,
 
     )
     if 'Messages' in response:
