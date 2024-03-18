@@ -31,10 +31,11 @@ def get_response_from_queue(fname):
     sqs = boto3.client('sqs', region_name='us-east-1')
     response = sqs.receive_message(
         QueueUrl=response_queue_url,
-        MaxNumberOfMessages=1,
+        MaxNumberOfMessages=10,
         MessageAttributeNames=[
             'All',
         ],
+        WaitTImeSeconds=60,
 
     )
     if 'Messages' in response:
