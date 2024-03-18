@@ -9,9 +9,9 @@ response_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/122555400
 import threading
 
 lock = threading.Lock()
+sqs = boto3.client('sqs', region_name='us-east-1')
 
 def send_file_to_queue(f):
-    sqs = boto3.client('sqs', region_name='us-east-1')
     file_content_binary = f.read()
     file_content_base64 = base64.b64encode(file_content_binary).decode('utf-8')
     f_name = f.filename.split('.')[0]
@@ -28,7 +28,6 @@ def send_file_to_queue(f):
 )
 
 def get_response_from_queue(fname):
-    sqs = boto3.client('sqs', region_name='us-east-1')
     response = sqs.receive_message(
         QueueUrl=response_queue_url,
         MaxNumberOfMessages=10,
