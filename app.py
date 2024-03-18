@@ -44,6 +44,10 @@ def get_response_from_queue(fname):
             content = message['Body']
             file_name = content.split(':')[0]
             if file_name==fname:
+                sqs.delete_message(
+                    QueueUrl=response_queue_url,
+                    ReceiptHandle=message['ReceiptHandle']
+                )
                 return content
     else:
         return None
