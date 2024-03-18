@@ -6,6 +6,9 @@ import base64
 app = Flask(__name__)
 req_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/1225554005-req-queue'
 response_queue_url = 'https://sqs.us-east-1.amazonaws.com/266091126189/1225554005-resp-queue'
+import threading
+
+lock = threading.Lock()
 
 def send_file_to_queue(f):
     sqs = boto3.client('sqs', region_name='us-east-1')
@@ -50,8 +53,10 @@ def process_file():
     f_name = f.filename.split('.')[0]
     result = None
     print("sending file to queue")
-    send_file_to_queue(f)
+    with lock:
+        send_file_to_queue(f)
     print("sent file to queue")
     while result is None:
-        result = get_response_from_queue(f_name)
+        with lock:
+            result = get_response_from_queue(f_name)
     return result
