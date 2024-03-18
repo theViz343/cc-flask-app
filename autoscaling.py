@@ -75,4 +75,7 @@ while True:
     if current_number>no_of_instances_needed:
         scale_down(current_number-no_of_instances_needed)
     elif current_number<no_of_instances_needed:
-        scale_up(no_of_instances_needed-current_number)
+        # scale_up(no_of_instances_needed-current_number)
+        pass
+    if number_of_messages == 0:
+        scale_down(20)
