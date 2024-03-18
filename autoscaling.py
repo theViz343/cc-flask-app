@@ -63,7 +63,7 @@ def scale_down(number):
     count = min(number, len(instance_ids))
     if count > 0:
         ec2.terminate_instances(InstanceIds=instance_ids[:count])
-    print(f"Created {count} instances")
+    print(f"Deleted {count} instances")
 
 while True:
     number_of_messages = get_queue_length(req_queue_url)
